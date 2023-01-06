@@ -765,10 +765,13 @@ class Sync extends EventEmitter {
   async folderContents(folder) {
     await this.finishLoading();
 
-    let q = folder ? `trashed = false and "${folder}" in parents` : null;
+    let q = folder ? `trashed = false and "${folder}" in parents and mimeType = 'application/vnd.google-apps.folder'` : null;
 
-    let {nextPageToken, files} = await this.filesListChunk({folder,q});
+    let filesChunk = await this.filesListChunk({folder,q});
+    let {nextPageToken, files} = filesChunk.data;
 
+    //debug(filesChunk);
+    //debug(files[0]);
     debug(files, nextPageToken);
     debug("(Chunk 1)");
 
@@ -811,10 +814,11 @@ class Sync extends EventEmitter {
       }
       debug("Getting files chunk", args);
       this.drive.files.list(args, (err, result) => {
+        debug("err",err);
         if (err) {
           return reject(err);
         }
-
+        debug("result",result);
         resolve(result);
       });
     });

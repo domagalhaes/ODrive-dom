@@ -1,7 +1,7 @@
 module.exports = {
-  debug: function() {
+  debug: function() {console.debug.apply(console, arguments);
   },
-  verbose: function() {
+  verbose: function() {console.info.apply(console, arguments);
   },
   log: function() {console.log.apply(console, arguments);},
   error: function() {console.error.apply(console, arguments);}
